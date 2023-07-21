@@ -1,5 +1,6 @@
 import { Button, Checkbox, Form, Input } from 'antd';
 import { Link } from 'react-router-dom';
+import './style.css';
 
 export default function Login() {
   const onFinish = (values) => {
@@ -10,9 +11,10 @@ export default function Login() {
   };
   return (
     <>
-      <Link to="/">Login</Link>
-      <Link to="/layout">Layout</Link>
+      {/* <Link to="/">Login</Link>
+      <Link to="/layout">Layout</Link> */}
       <Form
+        className="app"
         name="basic"
         labelCol={{
           span: 8,
@@ -20,9 +22,11 @@ export default function Login() {
         wrapperCol={{
           span: 16,
         }}
-        style={{
-          maxWidth: 600,
-        }}
+        style={
+          {
+            // maxWidth: 600,
+          }
+        }
         initialValues={{
           remember: true,
         }}
