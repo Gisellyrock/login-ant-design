@@ -1,34 +1,44 @@
 import { Button, Table, Modal, Input } from 'antd';
 import { useState } from 'react';
 import { EditOutlined, DeleteOutlined } from '@ant-design/icons';
+import { useNavigate } from 'react-router-dom';
 
 export default function PageTable() {
   const [isEditing, setIsEditing] = useState(false);
-  const [editingStudent, setEditingStudent] = useState(null);
+  const [editingUser, setEditingUser] = useState(null);
+  const navigate = useNavigate();
   const [dataSource, setDataSource] = useState([
     {
       id: 1,
       name: 'John',
       email: 'john@gmail.com',
-      address: 'John Address',
+      age: 46,
+      website: 'www.john.com',
+      introduction: 'Hello',
     },
     {
       id: 2,
       name: 'David',
       email: 'david@gmail.com',
-      address: 'David Address',
+      age: 52,
+      website: 'www.david.com',
+      introduction: 'Hi',
     },
     {
       id: 3,
       name: 'James',
       email: 'james@gmail.com',
-      address: 'James Address',
+      age: 32,
+      website: 'www.james.com',
+      introduction: 'Hallo',
     },
     {
       id: 4,
       name: 'Sam',
       email: 'sam@gmail.com',
-      address: 'Sam Address',
+      age: 52,
+      website: 'www.sam.com',
+      introduction: 'Ok',
     },
   ]);
   const columns = [
@@ -49,23 +59,33 @@ export default function PageTable() {
     },
     {
       key: '4',
-      title: 'Address',
-      dataIndex: 'address',
+      title: 'Age',
+      dataIndex: 'age',
     },
     {
       key: '5',
+      title: 'Website',
+      dataIndex: 'website',
+    },
+    {
+      key: '6',
+      title: 'Introduction',
+      dataIndex: 'introduction',
+    },
+    {
+      key: '7',
       title: 'Actions',
       render: (record) => {
         return (
           <>
             <EditOutlined
               onClick={() => {
-                onEditStudent(record);
+                onEditUser(record);
               }}
             />
             <DeleteOutlined
               onClick={() => {
-                onDeleteStudent(record);
+                onDeleteUser(record);
               }}
               style={{ color: 'red', marginLeft: 12 }}
             />
@@ -75,45 +95,38 @@ export default function PageTable() {
     },
   ];
 
-  const onAddStudent = () => {
-    const randomNumber = parseInt(Math.random() * 1000);
-    const newStudent = {
-      id: randomNumber,
-      name: 'Name ' + randomNumber,
-      email: randomNumber + '@gmail.com',
-      address: 'Address ' + randomNumber,
-    };
-    setDataSource((pre) => {
-      return [...pre, newStudent];
-    });
-  };
-  const onDeleteStudent = (record) => {
+  function onAddUser() {
+    navigate('/form');
+  }
+
+  const onDeleteUser = (record) => {
     Modal.confirm({
-      title: 'Are you sure, you want to delete this student record?',
+      title: 'Are you sure, you want to delete this user record?',
       okText: 'Yes',
       okType: 'danger',
       onOk: () => {
         setDataSource((pre) => {
-          return pre.filter((student) => student.id !== record.id);
+          return pre.filter((user) => user.id !== record.id);
         });
       },
     });
   };
-  const onEditStudent = (record) => {
+  const onEditUser = (record) => {
     setIsEditing(true);
-    setEditingStudent({ ...record });
+    setEditingUser({ ...record });
   };
   const resetEditing = () => {
     setIsEditing(false);
-    setEditingStudent(null);
+    setEditingUser(null);
   };
+
   return (
     <div className="App">
       <header className="App-header">
-        <Button onClick={onAddStudent}>Add a new Student</Button>
+        <Button onClick={onAddUser}>Add a new User</Button>
         <Table columns={columns} dataSource={dataSource}></Table>
         <Modal
-          title="Edit Student"
+          title="Edit user"
           visible={isEditing}
           okText="Save"
           onCancel={() => {
@@ -121,11 +134,11 @@ export default function PageTable() {
           }}
           onOk={() => {
             setDataSource((pre) => {
-              return pre.map((student) => {
-                if (student.id === editingStudent.id) {
-                  return editingStudent;
+              return pre.map((user) => {
+                if (user.id === editingUser.id) {
+                  return editingUser;
                 } else {
-                  return student;
+                  return user;
                 }
               });
             });
@@ -133,26 +146,42 @@ export default function PageTable() {
           }}
         >
           <Input
-            value={editingStudent?.name}
+            value={editingUser?.name}
             onChange={(e) => {
-              setEditingStudent((pre) => {
+              setEditingUser((pre) => {
                 return { ...pre, name: e.target.value };
               });
             }}
           />
           <Input
-            value={editingStudent?.email}
+            value={editingUser?.email}
             onChange={(e) => {
-              setEditingStudent((pre) => {
+              setEditingUser((pre) => {
                 return { ...pre, email: e.target.value };
               });
             }}
           />
           <Input
-            value={editingStudent?.address}
+            value={editingUser?.age}
             onChange={(e) => {
-              setEditingStudent((pre) => {
-                return { ...pre, address: e.target.value };
+              setEditingUser((pre) => {
+                return { ...pre, age: e.target.value };
+              });
+            }}
+          />
+          <Input
+            value={editingUser?.website}
+            onChange={(e) => {
+              setEditingUser((pre) => {
+                return { ...pre, website: e.target.value };
+              });
+            }}
+          />
+          <Input
+            value={editingUser?.introduction}
+            onChange={(e) => {
+              setEditingUser((pre) => {
+                return { ...pre, introduction: e.target.value };
               });
             }}
           />

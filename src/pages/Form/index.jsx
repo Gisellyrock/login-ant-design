@@ -5,7 +5,7 @@ import './style.css';
 export default function PageLayout() {
   return (
     <div className="App">
-      <header className="App-header">
+      <header>
         <Form
           name="normal_login"
           className="login-form"
@@ -13,27 +13,29 @@ export default function PageLayout() {
           autoComplete="off"
           labelCol={{ span: 10 }}
           wrapperCol={{ span: 14 }}
+          //onFinish define a função a ser executada quando o formulário é submetido com sucesso
           onFinish={(values) => {
             console.log({ values });
           }}
+          // OnFinishFailed define a função a ser executada quando ocorre um erro na submissão do formulário.
           onFinishFailed={(error) => {
             console.log({ error });
           }}
         >
           <Form.Item
             name="fullName"
-            label="Nome completo"
+            label="Name"
             rules={[
               {
                 required: true,
                 message: 'Por favor coloque seu nome completo',
               },
               { whitespace: true },
-              { min: 3 },
+              { min: 4 },
             ]}
             hasFeedback
           >
-            <Input placeholder="Digite seu nome" />
+            <Input placeholder="Digite seu nome completo" />
           </Form.Item>
 
           <Form.Item
@@ -50,7 +52,7 @@ export default function PageLayout() {
             <Input placeholder="Digite seu e-mail" />
           </Form.Item>
 
-          <Form.Item name="age" label="Idade">
+          <Form.Item name="age" label="Age">
             <Input placeholder="Digite sua idade" />
           </Form.Item>
 
@@ -64,16 +66,13 @@ export default function PageLayout() {
           >
             <Input placeholder="Digite seu website" />
           </Form.Item>
-          <Form.Item name={['user', 'introduction']} label="Introdução">
+          <Form.Item name={['user', 'introduction']} label="Introduction">
             <Input.TextArea />
           </Form.Item>
-          <Form.Item wrapperCol={{ offset: 8 }}>
-            <Button block type="primary" htmlType="submit">
-              Submit
-            </Button>
-          </Form.Item>
+
           <Form.Item
             name="username"
+            label="Username"
             rules={[{ required: true, message: 'Please input your Username!' }]}
           >
             <Input
@@ -83,6 +82,7 @@ export default function PageLayout() {
           </Form.Item>
           <Form.Item
             name="password"
+            label="Password"
             rules={[{ required: true, message: 'Please input your Password!' }]}
           >
             <Input
@@ -90,6 +90,11 @@ export default function PageLayout() {
               type="password"
               placeholder="Password"
             />
+          </Form.Item>
+          <Form.Item wrapperCol={{ offset: 8 }}>
+            <Button block type="primary" htmlType="submit">
+              Submit
+            </Button>
           </Form.Item>
         </Form>
       </header>

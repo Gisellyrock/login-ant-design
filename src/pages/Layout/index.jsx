@@ -1,12 +1,7 @@
-import {
-  DesktopOutlined,
-  FileOutlined,
-  PieChartOutlined,
-  TeamOutlined,
-  UserOutlined,
-} from '@ant-design/icons';
+import { TeamOutlined, UserOutlined, LogoutOutlined } from '@ant-design/icons';
 import { Breadcrumb, Layout, Menu, theme } from 'antd';
 import { useState } from 'react';
+import { Link } from 'react-router-dom';
 
 export default function PageLayout() {
   const { Header, Content, Footer, Sider } = Layout;
@@ -18,20 +13,26 @@ export default function PageLayout() {
       label,
     };
   }
+
+  const pageForm = <Link to="/form">Form</Link>;
+  const pageTable = <Link to="/table">Table</Link>;
+  const logout = (
+    <Link to="/" onClick={logOut}>
+      Logout
+    </Link>
+  );
+
   const items = [
-    getItem('Option 1', '1', <PieChartOutlined />),
-    getItem('Option 2', '2', <DesktopOutlined />),
-    getItem('User', 'sub1', <UserOutlined />, [
-      getItem('Tom', '3'),
-      getItem('Bill', '4'),
-      getItem('Alex', '5'),
-    ]),
-    getItem('Team', 'sub2', <TeamOutlined />, [
-      getItem('Team 1', '6'),
-      getItem('Team 2', '8'),
-    ]),
-    getItem('Files', '9', <FileOutlined />),
+    getItem(pageForm, 0, <UserOutlined />),
+    getItem(pageTable, 0, <TeamOutlined />),
+    getItem(logout, 0, <LogoutOutlined />),
   ];
+
+  function logOut() {
+    localStorage.clear;
+    window.location.href = '/';
+  }
+
   const [collapsed, setCollapsed] = useState(false);
   const {
     token: { colorBgContainer },
@@ -72,8 +73,8 @@ export default function PageLayout() {
               margin: '16px 0',
             }}
           >
-            <Breadcrumb.Item>User</Breadcrumb.Item>
-            <Breadcrumb.Item>Bill</Breadcrumb.Item>
+            {/* <Breadcrumb.Item>Users</Breadcrumb.Item>
+            <Breadcrumb.Item>System</Breadcrumb.Item> */}
           </Breadcrumb>
           <div
             style={{
@@ -82,7 +83,7 @@ export default function PageLayout() {
               background: colorBgContainer,
             }}
           >
-            Bill is a cat.
+            Welcome to the Users System!
           </div>
         </Content>
         <Footer
