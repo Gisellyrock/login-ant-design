@@ -1,5 +1,5 @@
+import { useState, useEffect } from 'react';
 import { Button, Table, Modal, Input } from 'antd';
-import { useState } from 'react';
 import { EditOutlined, DeleteOutlined } from '@ant-design/icons';
 import { useNavigate } from 'react-router-dom';
 
@@ -7,40 +7,33 @@ export default function PageTable() {
   const [isEditing, setIsEditing] = useState(false);
   const [editingUser, setEditingUser] = useState(null);
   const navigate = useNavigate();
-  const [dataSource, setDataSource] = useState([
-    {
-      id: 1,
-      name: 'John',
-      email: 'john@gmail.com',
-      age: 46,
-      website: 'www.john.com',
-      introduction: 'Hello',
-    },
-    {
-      id: 2,
-      name: 'David',
-      email: 'david@gmail.com',
-      age: 52,
-      website: 'www.david.com',
-      introduction: 'Hi',
-    },
-    {
-      id: 3,
-      name: 'James',
-      email: 'james@gmail.com',
-      age: 32,
-      website: 'www.james.com',
-      introduction: 'Hallo',
-    },
-    {
-      id: 4,
-      name: 'Sam',
-      email: 'sam@gmail.com',
-      age: 52,
-      website: 'www.sam.com',
-      introduction: 'Ok',
-    },
-  ]);
+  const [dataSource, setDataSource] = useState([]);
+
+  useEffect(() => {
+    fetchData();
+  }, []);
+
+  const fetchData = async () => {
+    const token = localStorage.getItem('usuario_logado');
+
+    try {
+      const response = await fetch('http://localhost:3000/users', {
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      });
+
+      if (response.ok) {
+        const data = await response.json();
+        setDataSource(data);
+      } else {
+        console.error('Error fetching data:', response.status);
+      }
+    } catch (error) {
+      console.error('Error fetching data:', error);
+    }
+  };
+
   const columns = [
     {
       key: '1',
@@ -111,10 +104,12 @@ export default function PageTable() {
       },
     });
   };
+
   const onEditUser = (record) => {
     setIsEditing(true);
     setEditingUser({ ...record });
   };
+
   const resetEditing = () => {
     setIsEditing(false);
     setEditingUser(null);
