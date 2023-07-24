@@ -1,5 +1,5 @@
 import { useState, useEffect } from 'react';
-import { Button, Table, Modal, Input } from 'antd';
+import { Button, Table, Modal, Input, message } from 'antd';
 import { EditOutlined, DeleteOutlined } from '@ant-design/icons';
 import { useNavigate } from 'react-router-dom';
 
@@ -94,13 +94,36 @@ export default function PageTable() {
 
   const onDeleteUser = (record) => {
     Modal.confirm({
-      title: 'Are you sure, you want to delete this user record?',
+      title: 'Are you sure you want to delete this user record?',
       okText: 'Yes',
       okType: 'danger',
-      onOk: () => {
-        setDataSource((pre) => {
-          return pre.filter((user) => user.id !== record.id);
-        });
+      async onOk() {
+        const token = localStorage.getItem('usuario_logado');
+
+        try {
+          const response = await fetch(
+            `http://localhost:3000/users/${record.id}`,
+            {
+              method: 'DELETE',
+              headers: {
+                Authorization: `Bearer ${token}`,
+              },
+            },
+          );
+
+          if (response.ok) {
+            setDataSource((pre) => {
+              return pre.filter((user) => user.id !== record.id);
+            });
+            message.success('User deleted successfully!');
+          } else {
+            console.error('Error deleting user:', response.status);
+            message.error('Error deleting user.');
+          }
+        } catch (error) {
+          console.error('Error deleting user:', error);
+          message.error('Error deleting user.');
+        }
       },
     });
   };
@@ -113,6 +136,44 @@ export default function PageTable() {
   const resetEditing = () => {
     setIsEditing(false);
     setEditingUser(null);
+  };
+
+  const onUpdateUser = async () => {
+    const token = localStorage.getItem('usuario_logado');
+
+    try {
+      const response = await fetch(
+        `http://localhost:3000/users/${editingUser.id}`,
+        {
+          method: 'PUT',
+          headers: {
+            Authorization: `Bearer ${token}`,
+            'Content-Type': 'application/json',
+          },
+          body: JSON.stringify(editingUser),
+        },
+      );
+
+      if (response.ok) {
+        setDataSource((pre) => {
+          return pre.map((user) => {
+            if (user.id === editingUser.id) {
+              return editingUser;
+            } else {
+              return user;
+            }
+          });
+        });
+        resetEditing();
+        message.success('User updated successfully!');
+      } else {
+        console.error('Error updating user:', response.status);
+        message.error('Error updating user.');
+      }
+    } catch (error) {
+      console.error('Error updating user:', error);
+      message.error('Error updating user.');
+    }
   };
 
   return (
@@ -128,16 +189,7 @@ export default function PageTable() {
             resetEditing();
           }}
           onOk={() => {
-            setDataSource((pre) => {
-              return pre.map((user) => {
-                if (user.id === editingUser.id) {
-                  return editingUser;
-                } else {
-                  return user;
-                }
-              });
-            });
-            resetEditing();
+            onUpdateUser();
           }}
         >
           <Input

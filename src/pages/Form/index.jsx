@@ -1,8 +1,56 @@
+import { useState } from 'react';
 import { Form, Button, Input } from 'antd';
 import { LockOutlined, UserOutlined } from '@ant-design/icons';
 import './style.css';
 
 export default function PageLayout() {
+  const [loading, setLoading] = useState(false);
+
+  const onFinish = async (values) => {
+    const token = localStorage.getItem('usuario_logado');
+
+    // Extrair valores do formulário
+    const { fullName, email, age, website, introduction, username, password } =
+      values;
+
+    setLoading(true);
+
+    // Criar objeto de dados para enviar na solicitação
+    const data = {
+      name: fullName, // Renomeado para fullName
+      email,
+      age,
+      website,
+      user: {
+        username,
+        password,
+        introduction, // Incluído o campo introduction no objeto user
+      },
+    };
+
+    try {
+      const response = await fetch('http://localhost:3000/users', {
+        method: 'POST',
+        headers: {
+          Authorization: `Bearer ${token}`,
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify(data),
+      });
+
+      if (response.ok) {
+        console.log('User registered successfully!');
+        setLoading(false);
+      } else {
+        console.error('Error registering user:', response.status);
+        setLoading(false);
+      }
+    } catch (error) {
+      console.error('Error registering user:', error);
+      setLoading(false);
+    }
+  };
+
   return (
     <div className="App">
       <header>
@@ -13,29 +61,25 @@ export default function PageLayout() {
           autoComplete="off"
           labelCol={{ span: 10 }}
           wrapperCol={{ span: 14 }}
-          //onFinish define a função a ser executada quando o formulário é submetido com sucesso
-          onFinish={(values) => {
-            console.log({ values });
-          }}
-          // OnFinishFailed define a função a ser executada quando ocorre um erro na submissão do formulário.
+          onFinish={onFinish}
           onFinishFailed={(error) => {
             console.log({ error });
           }}
         >
           <Form.Item
-            name="fullName"
+            name="fullName" // Renomeado para fullName
             label="Name"
             rules={[
               {
                 required: true,
-                message: 'Por favor coloque seu nome completo',
+                message: 'Please input your full name',
               },
               { whitespace: true },
               { min: 4 },
             ]}
             hasFeedback
           >
-            <Input placeholder="Digite seu nome completo" />
+            <Input placeholder="Enter your full name" />
           </Form.Item>
 
           <Form.Item
@@ -43,30 +87,32 @@ export default function PageLayout() {
             label="Email"
             rules={[
               {
-                message: 'Por favor escreva seu e-mail',
+                message: 'Please enter your email',
               },
-              { type: 'email', message: 'Email inválido' },
+              { type: 'email', message: 'Invalid email format' },
             ]}
             hasFeedback
           >
-            <Input placeholder="Digite seu e-mail" />
+            <Input placeholder="Enter your email" />
           </Form.Item>
 
           <Form.Item name="age" label="Age">
-            <Input placeholder="Digite sua idade" />
+            <Input placeholder="Enter your age" />
           </Form.Item>
 
           <Form.Item
             name="website"
             label="Website"
-            rules={[
-              { type: 'url', message: 'Por favor digite uma url válida' },
-            ]}
+            rules={[{ type: 'url', message: 'Please enter a valid URL' }]}
             hasFeedback
           >
-            <Input placeholder="Digite seu website" />
+            <Input placeholder="Enter your website" />
           </Form.Item>
-          <Form.Item name={['user', 'introduction']} label="Introduction">
+
+          <Form.Item
+            name={['user', 'introduction']} // Mantido o mesmo nome aqui
+            label="Introduction"
+          >
             <Input.TextArea />
           </Form.Item>
 
@@ -80,6 +126,7 @@ export default function PageLayout() {
               placeholder="Username"
             />
           </Form.Item>
+
           <Form.Item
             name="password"
             label="Password"
@@ -91,8 +138,9 @@ export default function PageLayout() {
               placeholder="Password"
             />
           </Form.Item>
+
           <Form.Item wrapperCol={{ offset: 8 }}>
-            <Button block type="primary" htmlType="submit">
+            <Button block type="primary" htmlType="submit" loading={loading}>
               Submit
             </Button>
           </Form.Item>
