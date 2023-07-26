@@ -127,12 +127,13 @@ export default function PageTable() {
       },
     });
   };
-
+  // Função onEditUser será chamada quando o ícone de edição for clicado
   const onEditUser = (record) => {
     setIsEditing(true);
     setEditingUser({ ...record });
   };
 
+  // Função resetEditing será chamada para fechar o modal de edição
   const resetEditing = () => {
     setIsEditing(false);
     setEditingUser(null);

@@ -2,9 +2,11 @@ import { useState } from 'react';
 import { Form, Button, Input } from 'antd';
 import { LockOutlined, UserOutlined } from '@ant-design/icons';
 import './style.css';
+import { useNavigate } from 'react-router-dom';
 
 export default function PageLayout() {
   const [loading, setLoading] = useState(false);
+  const navigate = useNavigate();
 
   const onFinish = async (values) => {
     const token = localStorage.getItem('usuario_logado');
@@ -21,11 +23,9 @@ export default function PageLayout() {
       email,
       age,
       website,
-      user: {
-        username,
-        password,
-        introduction, // Incluído o campo introduction no objeto user
-      },
+      username,
+      password,
+      introduction, // Incluído o campo introduction no objeto user
     };
 
     try {
@@ -41,6 +41,7 @@ export default function PageLayout() {
       if (response.ok) {
         console.log('User registered successfully!');
         setLoading(false);
+        navigate('/table');
       } else {
         console.error('Error registering user:', response.status);
         setLoading(false);
@@ -110,7 +111,7 @@ export default function PageLayout() {
           </Form.Item>
 
           <Form.Item
-            name={['user', 'introduction']} // Mantido o mesmo nome aqui
+            name="introduction" // Mantido o mesmo nome aqui
             label="Introduction"
           >
             <Input.TextArea />
