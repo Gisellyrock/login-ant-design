@@ -72,10 +72,7 @@ export default function PageLayout() {
             style={{
               margin: '16px 0',
             }}
-          >
-            {/* <Breadcrumb.Item>Users</Breadcrumb.Item>
-            <Breadcrumb.Item>System</Breadcrumb.Item> */}
-          </Breadcrumb>
+          ></Breadcrumb>
           <div
             style={{
               padding: 24,
