@@ -87,7 +87,10 @@ export default function PageLayout() {
           style={{
             textAlign: 'center',
           }}
-        ></Footer>
+        >
+          {' '}
+          Departamento de Tecnologia e Inovação - DIT/PC
+        </Footer>
       </Layout>
     </Layout>
   );

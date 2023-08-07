@@ -25,7 +25,7 @@ export default function PageLayout() {
       website,
       username,
       password,
-      introduction, // Incluído o campo introduction no objeto user
+      introduction,
     };
 
     try {
@@ -41,7 +41,7 @@ export default function PageLayout() {
       if (response.ok) {
         console.log('User registered successfully!');
         setLoading(false);
-        navigate('/table');
+        navigate('/layout');
       } else {
         console.error('Error registering user:', response.status);
         setLoading(false);
@@ -110,10 +110,7 @@ export default function PageLayout() {
             <Input placeholder="Enter your website" />
           </Form.Item>
 
-          <Form.Item
-            name="introduction" // Mantido o mesmo nome aqui
-            label="Introduction"
-          >
+          <Form.Item name="introduction" label="Introduction">
             <Input.TextArea />
           </Form.Item>
 
