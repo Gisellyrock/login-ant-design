@@ -4,7 +4,7 @@ import { LockOutlined, UserOutlined } from '@ant-design/icons';
 import './style.css';
 import { useNavigate } from 'react-router-dom';
 
-export default function PageLayout() {
+export default function PageForm() {
   const [loading, setLoading] = useState(false);
   const navigate = useNavigate();
 
